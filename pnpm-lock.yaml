@@ -10,7 +10,7 @@ specifiers:
   eslint-plugin-vue: ^8.3.0
   monaco-proto-lint: ^0.0.1
   prettier: ^2.5.1
-  protobuf.js: ^1.1.2
+  protobufjs: ^6.11.2
   sass: ^1.49.0
   unplugin-vue-components: ^0.17.13
   vite: ^2.7.2
@@ -23,7 +23,7 @@ dependencies:
   '@ant-design/icons-vue': 6.0.1_vue@3.2.27
   ant-design-vue: 3.0.0-beta.7_1d3c0f59c01af099101b44516eefc99f
   monaco-proto-lint: 0.0.1
-  protobuf.js: 1.1.2
+  protobufjs: 6.11.2
   vue: 3.2.27
   vue-monaco-cdn: 2.0.1
   vue-router: 4.0.12_vue@3.2.27
@@ -194,6 +194,49 @@ packages:
       fastq: 1.13.0
     dev: true
 
+  /@protobufjs/aspromise/1.1.2:
+    resolution: {integrity: sha1-m4sMxmPWaafY9vXQiToU00jzD78=}
+    dev: false
+
+  /@protobufjs/base64/1.1.2:
+    resolution: {integrity: sha512-AZkcAA5vnN/v4PDqKyMR5lx7hZttPDgClv83E//FMNhR2TMcLUhfRUBHCmSl0oi9zMgDDqRUJkSxO3wm85+XLg==}
+    dev: false
+
+  /@protobufjs/codegen/2.0.4:
+    resolution: {integrity: sha512-YyFaikqM5sH0ziFZCN3xDC7zeGaB/d0IUb9CATugHWbd1FRFwWwt4ld4OYMPWu5a3Xe01mGAULCdqhMlPl29Jg==}
+    dev: false
+
+  /@protobufjs/eventemitter/1.1.0:
+    resolution: {integrity: sha1-NVy8mLr61ZePntCV85diHx0Ga3A=}
+    dev: false
+
+  /@protobufjs/fetch/1.1.0:
+    resolution: {integrity: sha1-upn7WYYUr2VwDBYZ/wbUVLDYTEU=}
+    dependencies:
+      '@protobufjs/aspromise': 1.1.2
+      '@protobufjs/inquire': 1.1.0
+    dev: false
+
+  /@protobufjs/float/1.0.2:
+    resolution: {integrity: sha1-Xp4avctz/Ap8uLKR33jIy9l7h9E=}
+    dev: false
+
+  /@protobufjs/inquire/1.1.0:
+    resolution: {integrity: sha1-/yAOPnzyQp4tyvwRQIKOjMY48Ik=}
+    dev: false
+
+  /@protobufjs/path/1.1.2:
+    resolution: {integrity: sha1-bMKyDFya1q0NzP0hynZz2Nf79o0=}
+    dev: false
+
+  /@protobufjs/pool/1.1.0:
+    resolution: {integrity: sha1-Cf0V8tbTq/qbZbw2ZQbWrXhG/1Q=}
+    dev: false
+
+  /@protobufjs/utf8/1.1.0:
+    resolution: {integrity: sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=}
+    dev: false
+
   /@rollup/pluginutils/4.1.2:
     resolution: {integrity: sha512-ROn4qvkxP9SyPeHaf7uQC/GPFY6L/OWy9+bd9AwcjOAWQwxRscoEyAUD8qCY5o5iL4jqQwoLk2kaTKJPb/HwzQ==}
     engines: {node: '>= 8.0.0'}
@@ -211,6 +254,14 @@ packages:
 
   /@types/lodash/4.14.178:
     resolution: {integrity: sha512-0d5Wd09ItQWH1qFbEyQ7oTQ3GZrMfth5JkbN3EvTKLXcHLRDSXeLnlvlOn0wvxVIwK5o2M8JzP/OWz7T3NRsbw==}
+    dev: false
+
+  /@types/long/4.0.1:
+    resolution: {integrity: sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==}
+    dev: false
+
+  /@types/node/17.0.10:
+    resolution: {integrity: sha512-S/3xB4KzyFxYGCppyDt68yzBU9ysL88lSdIah4D6cptdcltc4NCPCAMc0+PCpg/lLIyC7IPvj2Z52OJWeIUkog==}
     dev: false
 
   /@types/throttle-debounce/2.1.0:
@@ -1252,9 +1303,8 @@ packages:
   /lodash/4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
-  /long/1.1.5:
-    resolution: {integrity: sha1-tcLBCj2D7g7Aqv+z5OcR0B9gfpo=}
-    engines: {node: '>=0.6'}
+  /long/4.0.0:
+    resolution: {integrity: sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==}
     dev: false
 
   /loose-envify/1.4.0:
@@ -1392,10 +1442,24 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: true
 
-  /protobuf.js/1.1.2:
-    resolution: {integrity: sha1-hYcKFzSgai7wB02HbNf+Cy6gzyY=}
+  /protobufjs/6.11.2:
+    resolution: {integrity: sha512-4BQJoPooKJl2G9j3XftkIXjoC9C0Av2NOrWmbLWT1vH32GcSUHjM0Arra6UfTsVyfMAuFzaLucXn1sadxJydAw==}
+    hasBin: true
+    requiresBuild: true
     dependencies:
-      long: 1.1.5
+      '@protobufjs/aspromise': 1.1.2
+      '@protobufjs/base64': 1.1.2
+      '@protobufjs/codegen': 2.0.4
+      '@protobufjs/eventemitter': 1.1.0
+      '@protobufjs/fetch': 1.1.0
+      '@protobufjs/float': 1.0.2
+      '@protobufjs/inquire': 1.1.0
+      '@protobufjs/path': 1.1.2
+      '@protobufjs/pool': 1.1.0
+      '@protobufjs/utf8': 1.1.0
+      '@types/long': 4.0.1
+      '@types/node': 17.0.10
+      long: 4.0.0
     dev: false
 
   /punycode/2.1.1:

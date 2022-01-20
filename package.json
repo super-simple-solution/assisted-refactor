@@ -10,7 +10,7 @@
     "@ant-design/icons-vue": "^6.0.1",
     "ant-design-vue": "3.0.0-beta.7",
     "monaco-proto-lint": "^0.0.1",
-    "protobuf.js": "^1.1.2",
+    "protobufjs": "^6.11.2",
     "vue": "^3.2.25",
     "vue-monaco-cdn": "^2.0.1",
     "vue-router": "4"

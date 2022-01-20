@@ -42,9 +42,12 @@
 </template>
 
 <script setup>
+import { parseProto } from '@/utils'
 import MonacoEditor from 'vue-monaco-cdn'
 import registerProtobuf from 'monaco-proto-lint'
-import { ref, reactive } from "vue"
+import { ref, reactive } from 'vue'
+
+parseProto(content)
 
 let data = reactive({
   loading: true,
@@ -72,6 +75,3 @@ function clear() {
   data.result = ''
 }
 </script>
-
-<style lang="scss" scoped>
-</style>

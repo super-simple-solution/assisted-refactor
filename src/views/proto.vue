@@ -2,7 +2,16 @@
   <div class="proto-container">
     <a-row :gutter="10">
       <a-col :span="12" class="input-text">
-        <monaco-editor url="https://fe-modules.oss-cn-beijing.aliyuncs.com/monaco-editor-0.20.0/min" @editorDidMount="editorDidMount" :options="data.editOption" :style="data.editStyle" class="editor" ref="source" v-model="data.text" theme="vs-dark" language="protobuf" />
+        <monaco-editor
+          url="https://fe-modules.oss-cn-beijing.aliyuncs.com/monaco-editor-0.20.0/min"
+          @editorDidMount="editorDidMount"
+          :options="data.editOption"
+          :style="data.editStyle"
+          class="editor"
+          ref="source"
+          v-model="data.text"
+          theme="vs-dark"
+          language="protobuf" />
         <div class="m10">
           <a-button danger class="mr10" @click="clear">
             <template #icon>
@@ -19,7 +28,14 @@
         </div>
       </a-col>
       <a-col span="12" class="input-text">
-        <monaco-editor url="https://fe-modules.oss-cn-beijing.aliyuncs.com/monaco-editor-0.20.0/min" :options="data.editOption" :style="data.editStyle" class="editor" v-model="data.result" theme="vs-dark" language="javascript" />
+        <monaco-editor
+          url="https://fe-modules.oss-cn-beijing.aliyuncs.com/monaco-editor-0.20.0/min"
+          :options="data.editOption"
+          :style="data.editStyle"
+          class="editor"
+          v-model="data.result"
+          theme="vs-dark"
+          language="javascript" />
       </a-col>
     </a-row>
   </div>

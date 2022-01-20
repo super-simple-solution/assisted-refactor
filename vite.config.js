@@ -7,11 +7,13 @@ import eslintPlugin from 'vite-plugin-eslint'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    port: 3001,
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
       'vue': 'vue/dist/vue.esm-bundler.js',
-      'vue-monaco-cdn': 'vue-monaco-cdn/dist/vue-monaco-cdn.umd.min.js'
     },
   },
   plugins: [

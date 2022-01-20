@@ -9,7 +9,7 @@
           :style="data.editStyle"
           class="editor"
           ref="source"
-          v-model="data.text"
+          v-model="text"
           theme="vs-dark"
           language="protobuf" />
         <div class="m10">
@@ -38,16 +38,23 @@
           language="javascript" />
       </a-col>
     </a-row>
+    <div>
+      text: {{text}}
+    </div>
+    <div>
+      result: {{data.result}}
+    </div>
   </div>
 </template>
 
 <script setup>
 import { parseProto } from '@/utils'
-import MonacoEditor from 'vue-monaco-cdn'
+import MonacoEditor from '@/components/monaco'
 import registerProtobuf from 'monaco-proto-lint'
 import { ref, reactive } from 'vue'
 
-parseProto(content)
+// parseProto(content)
+let text = ref('')
 
 let data = reactive({
   loading: true,
@@ -71,6 +78,7 @@ function format() {
   editor.getAction('editor.action.formatDocument').run()
 }
 function clear() {
+  text.value = ''
   data.text = ''
   data.result = ''
 }

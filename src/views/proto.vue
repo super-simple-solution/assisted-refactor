@@ -53,6 +53,7 @@
 
 <script setup>
 import { parseProto } from '@/utils'
+import { formatResult } from '@/utils/format'
 import MonacoEditor from '@/components/monaco'
 import registerProtobuf from 'monaco-proto-lint'
 import { ref, reactive, watch } from 'vue'
@@ -97,6 +98,7 @@ function clear() {
 }
 
 watch(() => data.text, (value) => {
-  data.result = parseProto(value)
+  let objectRes =  parseProto(value)
+  data.result = formatResult(objectRes)
 })
 </script>

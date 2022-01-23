@@ -44,7 +44,7 @@ let object = AwesomeMessage.toObject(messageRes, {
       int64: String,
       // see ConversionOptions
   })
-  let res = format(object)
+  let res = object
   console.log(res, 'res')
   return res
 }

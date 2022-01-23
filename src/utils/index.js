@@ -16,62 +16,83 @@ export function parseProto(content) {
     syntax = "proto3";
     package packageName;
     ${content}
-`
-let root = null
-try {
-  root = parse(proto, {
-    keepCase: true,
-  }).root
-} catch(e) {
-  console.log(e)
-  return ''
-}
-
-let AwesomeMessage = root.lookupType(`packageName.${MessageName}`)
-
-let {
-  nestedArray,
-  fieldsArray
-} = AwesomeMessage
-
-let fieldsMap = {}
-fieldsArray.forEach(item => {
-  fieldsMap[item.name] = item.type
-})
-let nestedMap = {}
-nestedArray.forEach(item => {
-  nestedMap[item.name] = item
-})
-
-let unknowTypeNameList = fieldsArray.filter(item => !normalFields.includes(item.type) && !nestedMap[item.type]).map(item => item.name)
-
-let payload = {}
-// ignore unknow type
-fieldsArray.forEach(item => {
-  if (!unknowTypeNameList.includes(item.name)) {
-    payload[item.name] = ''
+  `
+  let root = null
+  try {
+    root = parse(proto, {
+      keepCase: true,
+      alternateCommentMode: true,
+    }).root
+  } catch(e) {
+    console.log(e)
+    return ''
   }
-})
 
-let errMsg = AwesomeMessage.verify(payload)
-if (errMsg) console.log(errMsg, 'verify error')
+  let AwesomeMessage = root.lookupType(`packageName.${MessageName}`)
 
-let message = AwesomeMessage.create(payload)
+  let {
+    nestedArray,
+    fieldsArray
+  } = AwesomeMessage
 
-let buffer = AwesomeMessage.encode(message).finish();
-
-let messageRes = AwesomeMessage.decode(buffer)
-let object = AwesomeMessage.toObject(messageRes, {
-      longs: String,
-      enums: Number,
-      bytes: String,
-      int32: String,
-      int64: String,
-      // see ConversionOptions
+  let fieldsMap = {}
+  fieldsArray.forEach(item => {
+    fieldsMap[item.name] = item.type
   })
-  let res = object
-  console.log(res, 'res')
-  return res
+  let nestedMap = {}
+  nestedArray.forEach(item => {
+    nestedMap[item.name] = item
+  })
+
+  console.log(nestedMap, 'nestedMap')
+
+  let unknowTypeNameList = fieldsArray.filter(item => !normalFields.includes(item.type) && !nestedMap[item.type]).map(item => item.name)
+
+  let payload = {}
+  // ignore unknow type
+  fieldsArray.forEach(item => {
+    if (!unknowTypeNameList.includes(item.name)) {
+      payload[item.name] = ''
+    }
+  })
+
+  let errMsg = AwesomeMessage.verify(payload)
+  if (errMsg) console.log(errMsg, 'verify error')
+
+  let message = AwesomeMessage.create(payload)
+
+  let buffer = AwesomeMessage.encode(message).finish();
+
+  let messageRes = AwesomeMessage.decode(buffer)
+  let finalRes = {}
+  let object = AwesomeMessage.toObject(messageRes, {
+    longs: String,
+    enums: Number,
+    bytes: String,
+    int32: String,
+    int64: String,
+    // see ConversionOptions
+  })
+  finalRes.data = object
+  let nestResList = []
+  Object.keys(nestedMap).forEach(key => {
+    let nestRes = {}
+    let cur = nestedMap[key]
+    let {
+      valuesById,
+      comments
+    } = cur
+    for (let nKey in valuesById) {
+      nestRes[nKey] = comments[valuesById[nKey]]
+    }
+    nestResList.push({
+      name: cur.name,
+      data: nestRes
+    })
+  })
+  finalRes.nestResList = nestResList
+  console.log(finalRes, 'finalRes')
+  return finalRes
 }
 
 function format(obj) {

@@ -1,11 +1,17 @@
 import { parse } from 'protobufjs'
 let messageNameReg = /(message|enum)\s+(\S+)\s*{/
 
+const normalFields = [
+  'double', 'float', 'int32', 'int64', 'uint32', 'uint64', 'sint32', 'sint64', 'fixed32', 'fixed64', 'sfixed32', 'sfixed64', 'bool', 'string', 'bytes'
+]
+
 export function parseProto(content) {
-  let MessageName = content.match(messageNameReg)[2]
-  if (!MessageName) {
+  if (!content) return ''
+  let MessageNameMatch = content.match(messageNameReg)
+  if (!MessageNameMatch) {
     return 'message name error'
   }
+  let MessageName = MessageNameMatch[2]
   let proto = `
     syntax = "proto3";
     package packageName;
@@ -23,9 +29,28 @@ try {
 
 let AwesomeMessage = root.lookupType(`packageName.${MessageName}`)
 
+let {
+  nestedArray,
+  fieldsArray
+} = AwesomeMessage
+
+let fieldsMap = {}
+fieldsArray.forEach(item => {
+  fieldsMap[item.name] = item.type
+})
+let nestedMap = {}
+nestedArray.forEach(item => {
+  nestedMap[item.name] = item
+})
+
+let unknowTypeNameList = fieldsArray.filter(item => !normalFields.includes(item.type) && !nestedMap[item.type]).map(item => item.name)
+
 let payload = {}
-Object.keys(AwesomeMessage.fields).forEach(item => {
-  payload[item] = ''
+// ignore unknow type
+fieldsArray.forEach(item => {
+  if (!unknowTypeNameList.includes(item.name)) {
+    payload[item.name] = ''
+  }
 })
 
 let errMsg = AwesomeMessage.verify(payload)

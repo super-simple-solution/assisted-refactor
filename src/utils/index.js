@@ -1,5 +1,5 @@
 import { parse } from 'protobufjs'
-let messageNameReg = /(message|enum)\s(\S+)\s*{/
+let messageNameReg = /(message|enum)\s+(\S+)\s*{/
 
 export function parseProto(content) {
   let MessageName = content.match(messageNameReg)[2]
@@ -11,10 +11,15 @@ export function parseProto(content) {
     package packageName;
     ${content}
 `
-
-let root = parse(proto).root
-
-let res1 = root.lookup("Greeter")
+let root = null
+try {
+  root = parse(proto, {
+    keepCase: true,
+  }).root
+} catch(e) {
+  console.log(e)
+  return ''
+}
 
 let AwesomeMessage = root.lookupType(`packageName.${MessageName}`)
 
@@ -33,13 +38,24 @@ let buffer = AwesomeMessage.encode(message).finish();
 let messageRes = AwesomeMessage.decode(buffer)
 let object = AwesomeMessage.toObject(messageRes, {
       longs: String,
-      enums: String,
+      enums: Number,
       bytes: String,
+      int32: String,
+      int64: String,
       // see ConversionOptions
   })
-  let res = jsonStringify(object)
+  let res = format(object)
   console.log(res, 'res')
-  return jsonStringify(res)
+  return res
+}
+
+function format(obj) {
+    let str = JSON.stringify(obj, 0, 2)
+    let arr = str.match(/".*?":/g)
+    for(var i = 0; i < arr.length; i++) {
+      str = str.replace(arr[i], arr[i].replace(/"/g,''))
+    }
+    return str
 }
 
 export function jsonStringify(obj) {

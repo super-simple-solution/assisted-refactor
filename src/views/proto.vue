@@ -4,14 +4,24 @@
       <a-col :span="12" class="input-text">
         <monaco-editor
           url="https://fe-modules.oss-cn-beijing.aliyuncs.com/monaco-editor-0.20.0/min"
-          @editorDidMount="editorDidMount"
+          @editorDidMount="editor1DidMount"
           :options="data.editOption"
-          :style="data.editStyle"
+          :style="data.halfEditStyle"
           class="editor"
-          ref="source"
+          ref="source1"
           v-model="data.text"
           theme="vs-dark"
           language="protobuf" />
+        <monaco-editor
+          url="https://fe-modules.oss-cn-beijing.aliyuncs.com/monaco-editor-0.20.0/min"
+          @editorDidMount="editor2DidMount"
+          :options="data.editOption"
+          :style="data.halfEditStyle"
+          class="editor mt10"
+          ref="source2"
+          v-model="data.template"
+          theme="vs-dark"
+          language="javascript" />
         <div class="m10">
           <a-button danger class="mr10" @click="clear">
             <template #icon>
@@ -51,6 +61,7 @@ import { ref, reactive, watch } from 'vue'
 let data = reactive({
   loading: true,
   text: '',
+  template: '',
   result: '',
   editOption: {
     automaticLayout: true
@@ -58,19 +69,30 @@ let data = reactive({
   editStyle: {
     height: window.innerHeight - 60 + 'px'
   },
+  halfEditStyle: {
+    height: (window.innerHeight - 70) / 2 + 'px'
+  }
 })
-let source = ref(null)
-let editor = null
-function editorDidMount() {
-  editor = source.value.getMonaco()
+let source1 = ref(null)
+let source2 = ref(null)
+let editor1 = null
+let editor2 = null
+function editor1DidMount() {
+  editor1 = source1.value.getMonaco()
+  editor1.focus()
   registerProtobuf(monaco)
   data.loading = false
 }
+function editor2DidMount() {
+  editor2 = source2.value.getMonaco()
+}
 function format() {
-  editor.getAction('editor.action.formatDocument').run()
+  editor1.getAction('editor.action.formatDocument').run()
+  editor2.getAction('editor.action.formatDocument').run()
 }
 function clear() {
   data.text = ''
+  data.template = ''
   data.result = ''
 }
 

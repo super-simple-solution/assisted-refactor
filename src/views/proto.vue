@@ -56,7 +56,7 @@ import { parseProto } from '@/utils'
 import { formatResult } from '@/utils/format'
 import MonacoEditor from 'vue-monaco-cdn'
 import registerProtobuf from 'monaco-proto-lint'
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, nextTick } from 'vue'
 
 // parseProto(csontent)
 let data = reactive({
@@ -78,6 +78,7 @@ let source1 = ref(null)
 let source2 = ref(null)
 let editor1 = null
 let editor2 = null
+window.editor2 = editor2
 function editor1DidMount() {
   editor1 = source1.value.getMonaco()
   editor1.focus()
@@ -87,6 +88,7 @@ function editor1DidMount() {
 }
 function editor2DidMount() {
   editor2 = source2.value.getMonaco()
+  window.editor2 = editor2
 }
 function format() {
   editor1.getAction('editor.action.formatDocument').run()
@@ -100,6 +102,12 @@ function clear() {
 
 watch(() => data.text, (value) => {
   let objectRes =  parseProto(value)
-  data.result = formatResult(objectRes)
+  let dataRes = formatResult(objectRes.data)
+  data.result = dataRes
+  nextTick(() => format())
+  setTimeout(() => {
+    editor2.getAction('editor.action.formatDocument').run()
+  }, 1000)
+  // let enumRes = 
 })
 </script>

@@ -1,7 +1,8 @@
-const defaultColumns = `export const columns = [{
-      label: '序号',  
-      attr: { type: 'index' },
-    }`
+const defaultColumns = `export const columns = [
+{
+  label: '序号',  
+  attr: { type: 'index' },
+}`
 
 const defaultForm = `
 export function formInit(data = {}) {
@@ -12,13 +13,15 @@ export function formatResult(objectRes) {
   return toColumns(objectRes) + toFormInit(objectRes)
 }
 
+function  columnsItemTemp(value) {
+  return `,
+  {
+    prop: ${value},
+    label: ''
+  }`
+}
+
 function toColumns(objectRes = {}) {
-  function  columnsItemTemp(value) {
-    return `,  {
-      prop: ${value},
-      label: ''
-    }`
-  }
   let columnsTemplate = defaultColumns
   Object.keys(objectRes).forEach(item => {
     columnsTemplate += columnsItemTemp(item)

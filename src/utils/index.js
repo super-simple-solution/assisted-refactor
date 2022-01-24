@@ -5,6 +5,34 @@ const normalFields = [
   'double', 'float', 'int32', 'int64', 'uint32', 'uint64', 'sint32', 'sint64', 'fixed32', 'fixed64', 'sfixed32', 'sfixed64', 'bool', 'string', 'bytes'
 ]
 
+function parseRoot(content, MessageName) {
+  let proto = `
+    syntax = "proto3";
+    package packageName;
+    ${content}
+  `
+  let AwesomeMessage
+  try {
+    let root = parse(proto, {
+      keepCase: true,
+      alternateCommentMode: true,
+    }).root
+    AwesomeMessage = root.lookupType(`packageName.${MessageName}`)
+  } catch(e) {
+    console.log(e)
+    return ''
+  }
+  return AwesomeMessage
+}
+
+function regGene(name) {
+  return new RegExp(`[^\n]+${name}[^\n]+`, 'gm')
+}
+
+function uniqArray(arr) {
+  return Array.from(new Set(arr))
+}
+
 export function parseProto(content) {
   if (!content) return ''
   let MessageNameMatch = content.match(messageNameReg)
@@ -12,23 +40,9 @@ export function parseProto(content) {
     return 'message name error'
   }
   let MessageName = MessageNameMatch[2]
-  let proto = `
-    syntax = "proto3";
-    package packageName;
-    ${content}
-  `
-  let root = null
-  try {
-    root = parse(proto, {
-      keepCase: true,
-      alternateCommentMode: true,
-    }).root
-  } catch(e) {
-    console.log(e)
-    return ''
-  }
+  let AwesomeMessage = parseRoot(content, MessageName)
 
-  let AwesomeMessage = root.lookupType(`packageName.${MessageName}`)
+  if (!AwesomeMessage) return ''
 
   let {
     nestedArray,
@@ -46,12 +60,21 @@ export function parseProto(content) {
 
   console.log(nestedMap, 'nestedMap')
 
-  let unknowTypeNameList = fieldsArray.filter(item => !normalFields.includes(item.type) && !nestedMap[item.type]).map(item => item.name)
+  let unknowFieldList = fieldsArray.filter(item => !normalFields.includes(item.type) && !nestedMap[item.type])
+  let unknowNameList = unknowFieldList.map(item => item.name)
+  let unknowTypeList = uniqArray(unknowFieldList.map(item => item.type))
+  console.log(unknowTypeList, 'unknowTypeList')
+  if (unknowTypeList.length) {
+    unknowTypeList.forEach(item => {
+      content = content.replace(regGene(item), '')
+    })
+    AwesomeMessage = parseRoot(content, MessageName)
+  }
 
   let payload = {}
   // ignore unknow type
   fieldsArray.forEach(item => {
-    if (!unknowTypeNameList.includes(item.name)) {
+    if (!unknowNameList.includes(item.name)) {
       payload[item.name] = ''
     }
   })
@@ -73,6 +96,11 @@ export function parseProto(content) {
     int64: String,
     // see ConversionOptions
   })
+  if (unknowNameList.length) {
+    unknowNameList.forEach(item => {
+      object[item] = ''
+    })
+  }
   finalRes.data = object
   let nestResList = []
   Object.keys(nestedMap).forEach(key => {

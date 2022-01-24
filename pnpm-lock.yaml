@@ -16,6 +16,7 @@ specifiers:
   vite: ^2.7.2
   vite-plugin-eslint: ^1.3.0
   vue: ^3.2.25
+  vue-monaco-cdn: ^2.0.2
   vue-router: '4'
 
 dependencies:
@@ -24,6 +25,7 @@ dependencies:
   monaco-proto-lint: 0.0.1
   protobufjs: 6.11.2
   vue: 3.2.27
+  vue-monaco-cdn: 2.0.2
   vue-router: 4.0.12_vue@3.2.27
 
 devDependencies:
@@ -1790,6 +1792,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /vue-monaco-cdn/2.0.2:
+    resolution: {integrity: sha512-LkV2Flx1bNJ5HKmCUW63n3s4h3WT0lcEWNLKysEOau7rwDWbFICFl/MSCRV6Ge7GnKkNI6qFaJ99vVT4rofjQg==}
+    dependencies:
+      vue: 3.2.27
+    dev: false
 
   /vue-router/4.0.12_vue@3.2.27:
     resolution: {integrity: sha512-CPXvfqe+mZLB1kBWssssTiWg4EQERyqJZes7USiqfW9B5N2x+nHlnsM1D3b5CaJ6qgCvMmYJnz+G0iWjNCvXrg==}

@@ -54,7 +54,7 @@
 <script setup>
 import { parseProto } from '@/utils'
 import { formatResult } from '@/utils/format'
-import MonacoEditor from '@/components/monaco'
+import MonacoEditor from 'vue-monaco-cdn'
 import registerProtobuf from 'monaco-proto-lint'
 import { ref, reactive, watch } from 'vue'
 
@@ -81,6 +81,7 @@ let editor2 = null
 function editor1DidMount() {
   editor1 = source1.value.getMonaco()
   editor1.focus()
+  // support protobuf syntax
   registerProtobuf(monaco)
   data.loading = false
 }

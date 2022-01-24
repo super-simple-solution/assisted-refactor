@@ -14,6 +14,7 @@ export default defineConfig({
     alias: {
       '@': resolve(__dirname, './src'),
       'vue': 'vue/dist/vue.esm-bundler.js',
+      'vue-monaco-cdn': 'vue-monaco-cdn/dist/vue-monaco-cdn.umd.min.js'
     },
   },
   plugins: [

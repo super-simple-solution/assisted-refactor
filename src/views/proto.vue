@@ -53,7 +53,7 @@
 
 <script setup>
 import { parseProto } from '@/utils'
-import { formatResult } from '@/utils/format'
+import { formatResult, columnsGene } from '@/utils/format'
 import MonacoEditor from 'vue-monaco-cdn'
 import registerProtobuf from 'monaco-proto-lint'
 import { ref, reactive, watch, nextTick } from 'vue'
@@ -65,7 +65,8 @@ let data = reactive({
   template: '',
   result: '',
   editOption: {
-    automaticLayout: true
+    automaticLayout: true,
+    tabSize: 2
   },
   editStyle: {
     height: window.innerHeight - 60 + 'px'
@@ -102,7 +103,7 @@ function clear() {
 
 watch(() => data.text, (value) => {
   let objectRes =  parseProto(value)
-  let dataRes = formatResult(objectRes.data)
+  let dataRes = columnsGene(objectRes.data)
   data.result = dataRes
   nextTick(() => format())
   setTimeout(() => {

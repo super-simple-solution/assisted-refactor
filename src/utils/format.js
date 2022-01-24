@@ -1,8 +1,19 @@
-const defaultColumns = `export const columns = [
-{
-  label: '序号',  
-  attr: { type: 'index' },
-}`
+import ejs from 'ejs'
+
+export function columnsGene(data) {
+  // TODO: ejs用法有问题
+  let template = `<% for(var i = 0; i < Object.keys(data).length; ++i) {%>
+    { prop: '<%=fruits[key]%>s', label: '' }<% } %>`
+  let inject = ejs.render(data, template)
+  
+  return `export const columns = [
+    {
+      label: '序号',
+      attr: { type: 'index' },
+    },
+    ${inject}
+  ]`
+}
 
 const defaultForm = `
 export function formInit(data = {}) {

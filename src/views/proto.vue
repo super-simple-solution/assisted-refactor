@@ -11,7 +11,8 @@
           ref="source1"
           v-model="data.text"
           theme="vs-dark"
-          language="protobuf" />
+          language="protobuf"
+        />
         <monaco-editor
           url="https://fe-modules.oss-cn-beijing.aliyuncs.com/monaco-editor-0.20.0/min"
           @editorDidMount="editor2DidMount"
@@ -21,7 +22,8 @@
           ref="source2"
           v-model="data.template"
           theme="vs-dark"
-          language="javascript" />
+          language="javascript"
+        />
         <div class="m10">
           <a-button danger class="mr10" @click="clear">
             <template #icon>
@@ -45,7 +47,8 @@
           class="editor"
           v-model="data.result"
           theme="vs-dark"
-          language="javascript" />
+          language="javascript"
+        />
       </a-col>
     </a-row>
   </div>
@@ -53,7 +56,7 @@
 
 <script setup>
 import { parseProto } from '@/utils'
-import { formInitGene, columnsGene, enumGene } from '@/utils/format'
+import { formInitGene, columnsGene, enumGene, mockDataGene } from '@/utils/format'
 import MonacoEditor from 'vue-monaco-cdn'
 import registerProtobuf from 'monaco-proto-lint'
 import { ref, reactive, watch, nextTick } from 'vue'
@@ -103,9 +106,10 @@ function clear() {
 }
 
 watch(() => data.text, (value) => {
-  let objectRes =  parseProto(value)
+  let objectRes = parseProto(value)
   let dataRes = columnsGene(objectRes.data)
   dataRes += '\n' + formInitGene(objectRes.data)
+  dataRes += '\n' + mockDataGene(objectRes.data)
   dataRes += '\n' + objectRes.nestResList.map(item => enumGene(item)).join('\n')
   data.result = dataRes
   editor2.getAction('editor.action.formatDocument').run()

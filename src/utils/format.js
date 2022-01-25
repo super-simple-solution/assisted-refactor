@@ -34,8 +34,19 @@ function enumGene(data) {
   return `export const ${data.name} = ${formatObj(data.data)}`
 }
 
+function mockDataGene(data) {
+  let keys = Object.keys(data)
+  let template = `<% for(let i = 0; i < keys.length; ++i) {%>
+    <%=keys[i]%>: '', <% } %>`
+    let inject = ejs.render(template, { keys })
+  return `export const mockData = {
+    ${inject}
+  }`
+}
+
 export {
   columnsGene,
   formInitGene,
-  enumGene
+  enumGene,
+  mockDataGene
 }

@@ -94,8 +94,12 @@ export function parseProto(content) {
     bytes: String,
     int32: String,
     int64: String,
+    defaults: true,
+    // https://www.npmjs.com/package/protobufjs
     // see ConversionOptions
   })
+  console.log(object, 'object')
+
   if (unknowNameList.length) {
     unknowNameList.forEach(item => {
       object[item] = ''

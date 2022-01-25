@@ -1,55 +1,41 @@
 import ejs from 'ejs'
+import { formatObj } from './index'
 
-export function columnsGene(data) {
-  // TODO: ejs用法有问题
-  let template = `<% for(var i = 0; i < Object.keys(data).length; ++i) {%>
-    { prop: '<%=fruits[key]%>s', label: '' }<% } %>`
-  let inject = ejs.render(data, template)
+// TODO 根据使用场景生成不同模板gene template
+
+function columnsGene(data) {
+  let keys = Object.keys(data)
+  let template = `<% for(let i = 0; i < keys.length; ++i) {%>
+    { prop: '<%=keys[i]%>', label: '' },<% } %>`
+  let inject = ejs.render(template, { keys })
   
   return `export const columns = [
     {
       label: '序号',
       attr: { type: 'index' },
-    },
-    ${inject}
+    },${inject}
   ]`
 }
 
-const defaultForm = `
-export function formInit(data = {}) {
-  return {`
-
-
-export function formatResult(objectRes) {
-  return toColumns(objectRes) + toFormInit(objectRes)
-}
-
-function  columnsItemTemp(value) {
-  return `,
-  {
-    prop: ${value},
-    label: ''
+function formInitGene(data) {
+  let keys = Object.keys(data)
+  let template = `<% for(let i = 0; i < keys.length; ++i) {%>
+    <%=keys[i]%>: '', <% } %>`
+  let inject = ejs.render(template, { keys })
+  return `export function formInit(data = {}) {
+    data = data || {}
+    return {${inject}
+      ...data
+    }
   }`
 }
 
-function toColumns(objectRes = {}) {
-  let columnsTemplate = defaultColumns
-  Object.keys(objectRes).forEach(item => {
-    columnsTemplate += columnsItemTemp(item)
-  })
-  return columnsTemplate + `
-]`
+function enumGene(data) {
+  return `export const ${data.name} = ${formatObj(data.data)}`
 }
 
-function toFormInit(objectRes = {}) {
-  let formTemplate = defaultForm
-  Object.keys(objectRes).forEach(item => {
-    formTemplate += `
-    ${item}: '', `
-  })
-  return formTemplate + `
-      ...data
-    }
-  }
-  `
+export {
+  columnsGene,
+  formInitGene,
+  enumGene
 }

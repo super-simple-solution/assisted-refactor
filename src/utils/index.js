@@ -111,7 +111,7 @@ export function parseProto(content) {
       comments
     } = cur
     for (let nKey in valuesById) {
-      nestRes[nKey] = comments[valuesById[nKey]]
+      nestRes[nKey] = comments[valuesById[nKey]]?.replace(/[^:]+:/, '')
     }
     nestResList.push({
       name: cur.name,
@@ -123,7 +123,7 @@ export function parseProto(content) {
   return finalRes
 }
 
-function format(obj) {
+export function formatObj(obj) {
     let str = JSON.stringify(obj, 0, 2)
     let arr = str.match(/".*?":/g)
     for(var i = 0; i < arr.length; i++) {

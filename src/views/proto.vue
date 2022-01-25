@@ -53,7 +53,7 @@
 
 <script setup>
 import { parseProto } from '@/utils'
-import { formatResult, columnsGene } from '@/utils/format'
+import { formInitGene, columnsGene, enumGene } from '@/utils/format'
 import MonacoEditor from 'vue-monaco-cdn'
 import registerProtobuf from 'monaco-proto-lint'
 import { ref, reactive, watch, nextTick } from 'vue'
@@ -82,6 +82,7 @@ let editor2 = null
 window.editor2 = editor2
 function editor1DidMount() {
   editor1 = source1.value.getMonaco()
+  window.editor1 = editor1
   editor1.focus()
   // support protobuf syntax
   registerProtobuf(monaco)
@@ -104,11 +105,9 @@ function clear() {
 watch(() => data.text, (value) => {
   let objectRes =  parseProto(value)
   let dataRes = columnsGene(objectRes.data)
+  dataRes += '\n' + formInitGene(objectRes.data)
+  dataRes += '\n' + objectRes.nestResList.map(item => enumGene(item)).join('\n')
   data.result = dataRes
-  nextTick(() => format())
-  setTimeout(() => {
-    editor2.getAction('editor.action.formatDocument').run()
-  }, 1000)
-  // let enumRes = 
+  editor2.getAction('editor.action.formatDocument').run()
 })
 </script>

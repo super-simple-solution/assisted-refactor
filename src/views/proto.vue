@@ -55,11 +55,9 @@
 </template>
 
 <script setup>
-import { parseProto } from '@/utils'
 import { formInitGene, columnsGene, enumGene, mockDataGene } from '@/utils/format'
 import MonacoEditor from 'vue-monaco-cdn'
 import registerProtobuf from 'monaco-proto-lint'
-import { ref, reactive, watch, nextTick } from 'vue'
 
 // parseProto(csontent)
 let data = reactive({

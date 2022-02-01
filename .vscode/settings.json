@@ -1,15 +1,11 @@
 {
-  "editor.codeActionsOnSave": {
+    "editor.codeActionsOnSave": {
       "source.fixAll": true,
-      "source.fixAll.eslint": true
-  },
-  "eslint.alwaysShowStatus": true,
-  "eslint.validate": [
-      "vue",
-      "javascript",
-      "html",
-  ],
-  "[html]": {
+    },
+    "[vue]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-}
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+  }

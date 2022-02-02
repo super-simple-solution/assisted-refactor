@@ -8,7 +8,7 @@ function columnsGene(data) {
   let template = `<% for(let i = 0; i < keys.length; ++i) {%>
     { prop: '<%=keys[i]%>', label: '' },<% } %>`
   let inject = ejs.render(template, { keys })
-  
+
   return `export const columns = [
     {
       label: '序号',
@@ -38,15 +38,10 @@ function mockDataGene(data) {
   let keys = Object.keys(data)
   let template = `<% for(let i = 0; i < keys.length; ++i) {%>
     <%=keys[i]%>: '', <% } %>`
-    let inject = ejs.render(template, { keys })
+  let inject = ejs.render(template, { keys })
   return `export const mockData = {
     ${inject}
   }`
 }
 
-export {
-  columnsGene,
-  formInitGene,
-  enumGene,
-  mockDataGene
-}
+export { columnsGene, formInitGene, enumGene, mockDataGene }

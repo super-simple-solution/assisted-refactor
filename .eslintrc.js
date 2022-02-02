@@ -3,7 +3,6 @@ module.exports = {
     node: true,
     browser: true,
     es6: true,
-    webextensions: true,
     'vue/setup-compiler-macros': true,
   },
   plugins: ['vue', 'prettier'],

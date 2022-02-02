@@ -2,7 +2,21 @@ import { parse } from 'protobufjs'
 let messageNameReg = /(message|enum)\s+(\S+)\s*{/
 
 const normalFields = [
-  'double', 'float', 'int32', 'int64', 'uint32', 'uint64', 'sint32', 'sint64', 'fixed32', 'fixed64', 'sfixed32', 'sfixed64', 'bool', 'string', 'bytes'
+  'double',
+  'float',
+  'int32',
+  'int64',
+  'uint32',
+  'uint64',
+  'sint32',
+  'sint64',
+  'fixed32',
+  'fixed64',
+  'sfixed32',
+  'sfixed64',
+  'bool',
+  'string',
+  'bytes',
 ]
 
 function parseRoot(content, MessageName) {
@@ -18,7 +32,7 @@ function parseRoot(content, MessageName) {
       alternateCommentMode: true,
     }).root
     AwesomeMessage = root.lookupType(`packageName.${MessageName}`)
-  } catch(e) {
+  } catch (e) {
     console.log(e)
     return ''
   }
@@ -44,28 +58,25 @@ export function parseProto(content) {
 
   if (!AwesomeMessage) return ''
 
-  let {
-    nestedArray,
-    fieldsArray
-  } = AwesomeMessage
+  let { nestedArray, fieldsArray } = AwesomeMessage
 
   let fieldsMap = {}
-  fieldsArray.forEach(item => {
+  fieldsArray.forEach((item) => {
     fieldsMap[item.name] = item.type
   })
   let nestedMap = {}
-  nestedArray.forEach(item => {
+  nestedArray.forEach((item) => {
     nestedMap[item.name] = item
   })
 
   console.log(nestedMap, 'nestedMap')
 
-  let unknowFieldList = fieldsArray.filter(item => !normalFields.includes(item.type) && !nestedMap[item.type])
-  let unknowNameList = unknowFieldList.map(item => item.name)
-  let unknowTypeList = uniqArray(unknowFieldList.map(item => item.type))
+  let unknowFieldList = fieldsArray.filter((item) => !normalFields.includes(item.type) && !nestedMap[item.type])
+  let unknowNameList = unknowFieldList.map((item) => item.name)
+  let unknowTypeList = uniqArray(unknowFieldList.map((item) => item.type))
   console.log(unknowTypeList, 'unknowTypeList')
   if (unknowTypeList.length) {
-    unknowTypeList.forEach(item => {
+    unknowTypeList.forEach((item) => {
       content = content.replace(regGene(item), '')
     })
     AwesomeMessage = parseRoot(content, MessageName)
@@ -73,7 +84,7 @@ export function parseProto(content) {
 
   let payload = {}
   // ignore unknow type
-  fieldsArray.forEach(item => {
+  fieldsArray.forEach((item) => {
     if (!unknowNameList.includes(item.name)) {
       payload[item.name] = ''
     }
@@ -84,7 +95,7 @@ export function parseProto(content) {
 
   let message = AwesomeMessage.create(payload)
 
-  let buffer = AwesomeMessage.encode(message).finish();
+  let buffer = AwesomeMessage.encode(message).finish()
 
   let messageRes = AwesomeMessage.decode(buffer)
   let finalRes = {}
@@ -101,25 +112,22 @@ export function parseProto(content) {
   console.log(object, 'object')
 
   if (unknowNameList.length) {
-    unknowNameList.forEach(item => {
+    unknowNameList.forEach((item) => {
       object[item] = ''
     })
   }
   finalRes.data = object
   let nestResList = []
-  Object.keys(nestedMap).forEach(key => {
+  Object.keys(nestedMap).forEach((key) => {
     let nestRes = {}
     let cur = nestedMap[key]
-    let {
-      valuesById,
-      comments
-    } = cur
+    let { valuesById, comments } = cur
     for (let nKey in valuesById) {
       nestRes[nKey] = comments[valuesById[nKey]]?.replace(/[^:]+:/, '')
     }
     nestResList.push({
       name: cur.name,
-      data: nestRes
+      data: nestRes,
     })
   })
   finalRes.nestResList = nestResList
@@ -128,16 +136,16 @@ export function parseProto(content) {
 }
 
 export function formatObj(obj) {
-    let str = JSON.stringify(obj, 0, 2)
-    let arr = str.match(/".*?":/g)
-    for(var i = 0; i < arr.length; i++) {
-      str = str.replace(arr[i], arr[i].replace(/"/g,''))
-    }
-    return str
+  let str = JSON.stringify(obj, 0, 2)
+  let arr = str.match(/".*?":/g)
+  for (var i = 0; i < arr.length; i++) {
+    str = str.replace(arr[i], arr[i].replace(/"/g, ''))
+  }
+  return str
 }
 
 export function jsonStringify(obj) {
-  return JSON.stringify(obj, function(k, v) {
+  return JSON.stringify(obj, function (k, v) {
     if (typeof v === 'function' || v instanceof RegExp) {
       return v.toString()
     }
@@ -146,7 +154,7 @@ export function jsonStringify(obj) {
 }
 
 export function jsonParse(string) {
-  return JSON.parse(string, function(k, v) {
+  return JSON.parse(string, function (k, v) {
     try {
       if (typeof v === 'string') {
         if (v.indexOf('=>') !== -1) {

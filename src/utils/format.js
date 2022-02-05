@@ -9,12 +9,11 @@ function columnsGene(data) {
     { prop: '<%=keys[i]%>', label: '' },<% } %>`
   let inject = ejs.render(template, { keys })
   
-  return `export const columns = [
-    {
-      label: '序号',
-      attr: { type: 'index' },
-    },${inject}
-  ]`
+  return `export const tableConfig = {
+    index: true,
+    list: [${inject}
+    ]
+  }`
 }
 
 function formInitGene(data) {

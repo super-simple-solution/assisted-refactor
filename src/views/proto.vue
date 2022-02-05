@@ -108,7 +108,7 @@ watch(
   () => data.text,
   (value) => {
     let objectRes = parseProto(value)
-    let dataRes = columnsGene(objectRes.data)
+    let dataRes = columnsGene(objectRes.data, objectRes.commentMap)
     dataRes += '\n' + formInitGene(objectRes.data)
     dataRes += '\n' + mockDataGene(objectRes.data)
     dataRes += '\n' + objectRes.nestResList.map((item) => enumGene(item)).join('\n')

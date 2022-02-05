@@ -61,15 +61,15 @@ export function parseProto(content) {
   let { nestedArray, fieldsArray } = AwesomeMessage
 
   let fieldsMap = {}
+  let commentMap = {}
   fieldsArray.forEach((item) => {
     fieldsMap[item.name] = item.type
+    commentMap[item.name] = item.comment
   })
   let nestedMap = {}
   nestedArray.forEach((item) => {
     nestedMap[item.name] = item
   })
-
-  console.log(nestedMap, 'nestedMap')
 
   let unknowFieldList = fieldsArray.filter((item) => !normalFields.includes(item.type) && !nestedMap[item.type])
   let unknowNameList = unknowFieldList.map((item) => item.name)
@@ -109,6 +109,7 @@ export function parseProto(content) {
     // https://www.npmjs.com/package/protobufjs
     // see ConversionOptions
   })
+  console.log(messageRes, 'messageRes')
   console.log(object, 'object')
 
   if (unknowNameList.length) {
@@ -117,6 +118,7 @@ export function parseProto(content) {
     })
   }
   finalRes.data = object
+  finalRes.commentMap = commentMap
   let nestResList = []
   Object.keys(nestedMap).forEach((key) => {
     let nestRes = {}
@@ -131,7 +133,6 @@ export function parseProto(content) {
     })
   })
   finalRes.nestResList = nestResList
-  console.log(finalRes, 'finalRes')
   return finalRes
 }
 

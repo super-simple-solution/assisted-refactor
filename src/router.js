@@ -6,5 +6,5 @@ const routes = [{ path: '/', component: Proto }]
 
 export default createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
 })

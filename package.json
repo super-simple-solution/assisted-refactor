@@ -13,7 +13,7 @@
     "monaco-proto-lint": "^0.0.1",
     "protobufjs": "^6.11.2",
     "vue": "^3.2.29",
-    "vue-monaco-cdn": "^2.0.2",
+    "vue-monaco-cdn": "^2.0.3",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {

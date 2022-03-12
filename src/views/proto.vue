@@ -15,7 +15,7 @@
           格式化
         </a-button>
       </div>
-      <a-select v-model:value="language" style="width: 120px">
+      <a-select v-model:value="language" style="width: 300px">
         <a-select-option value="javascript"> JavaScript </a-select-option>
         <a-select-option value="java"> Java </a-select-option>
       </a-select>

@@ -1,6 +1,6 @@
 import { parse } from 'protobufjs'
 let messageNameReg = /(message|enum)\s+(\S+)\s*{/
-const normalFields = [
+export const normalFields = [
   'double',
   'float',
   'int32',
@@ -53,6 +53,7 @@ export function parseProto(content) {
     return 'message name error'
   }
   let MessageName = MessageNameMatch[2]
+  console.log('MessageName', MessageName)
   let AwesomeMessage = parseRoot(content, MessageName)
 
   if (!AwesomeMessage) return ''
@@ -61,10 +62,15 @@ export function parseProto(content) {
 
   let fieldsMap = {}
   let commentMap = {}
+  let repeatedMap = {}
+  let typeMap = {}
   fieldsArray.forEach((item) => {
     fieldsMap[item.name] = item.type
     commentMap[item.name] = item.comment
+    repeatedMap[item.name] = item.repeated
+    typeMap[item.name] = item.type
   })
+  console.log('fieldsArray', fieldsArray)
   let nestedMap = {}
   nestedArray.forEach((item) => {
     nestedMap[item.name] = item
@@ -98,6 +104,7 @@ export function parseProto(content) {
 
   let messageRes = AwesomeMessage.decode(buffer)
   let finalRes = {}
+  finalRes.MessageName = MessageName
   let object = AwesomeMessage.toObject(messageRes, {
     longs: String,
     enums: Number,
@@ -108,8 +115,8 @@ export function parseProto(content) {
     // https://www.npmjs.com/package/protobufjs
     // see ConversionOptions
   })
-  console.log(messageRes, 'messageRes')
-  console.log(object, 'object')
+  // console.log(messageRes, 'messageRes')
+  // console.log(object, 'object')
 
   if (unknowNameList.length) {
     unknowNameList.forEach((item) => {
@@ -118,7 +125,11 @@ export function parseProto(content) {
   }
   finalRes.data = object
   finalRes.commentMap = commentMap
+  finalRes.fieldsMap = fieldsMap
+  finalRes.repeatedMap = repeatedMap // 是否为数组
+  finalRes.typeMap = typeMap // 是否为数组
   let nestResList = []
+  // console.log(nestedMap, 'nestedMap')
   Object.keys(nestedMap).forEach((key) => {
     let nestRes = {}
     let cur = nestedMap[key]
@@ -173,4 +184,12 @@ export function jsonParse(string) {
       console.log(string, '\n', e.message)
     }
   })
+}
+
+export function toHump(name) {
+  return name
+    .replace(/( |^)[a-z]/g, (item) => item.toUpperCase())
+    .replace(/_(\w)/g, function (all, letter) {
+      return letter.toUpperCase()
+    })
 }

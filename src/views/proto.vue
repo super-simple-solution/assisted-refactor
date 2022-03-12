@@ -1,5 +1,25 @@
 <template>
   <div class="proto-container">
+    <div class="m10 flex">
+      <div>
+        <a-button danger class="mr10" @click="clear">
+          <template #icon>
+            <clear-outlined />
+          </template>
+          清空
+        </a-button>
+        <a-button type="primary" @click="format">
+          <template #icon>
+            <format-painter-outlined />
+          </template>
+          格式化
+        </a-button>
+      </div>
+      <a-select v-model:value="language" style="width: 120px">
+        <a-select-option value="javascript"> JavaScript </a-select-option>
+        <a-select-option value="java"> Java </a-select-option>
+      </a-select>
+    </div>
     <a-row :gutter="10">
       <a-col :span="12" class="input-text">
         <monaco-editor
@@ -21,23 +41,9 @@
           :style="data.halfEditStyle"
           class="editor mt10"
           theme="vs-dark"
-          language="javascript"
+          :language="language"
           @editor-did-mount="editor2DidMount"
         />
-        <div class="m10">
-          <a-button danger class="mr10" @click="clear">
-            <template #icon>
-              <clear-outlined />
-            </template>
-            清空
-          </a-button>
-          <a-button type="primary" @click="format">
-            <template #icon>
-              <format-painter-outlined />
-            </template>
-            格式化
-          </a-button>
-        </div>
       </a-col>
       <a-col span="12" class="input-text">
         <monaco-editor
@@ -47,7 +53,7 @@
           :style="data.editStyle"
           class="editor"
           theme="vs-dark"
-          language="javascript"
+          :language="language"
         />
       </a-col>
     </a-row>
@@ -56,11 +62,14 @@
 
 <script setup>
 import { formInitGene, columnsGene, enumGene, mockDataGene } from '@/utils/format'
+import { java2Proto, proto2Java } from '@/utils/java'
 import MonacoEditor from 'vue-monaco-cdn'
 import registerProtobuf from 'monaco-proto-lint'
 import { parseProto } from '@/utils'
+import { watch } from 'vue'
 
 // parseProto(csontent)
+let language = ref('javascript')
 let data = reactive({
   loading: true,
   text: '',
@@ -103,15 +112,21 @@ function clear() {
   data.template = ''
   data.result = ''
 }
-
+watch(language, () => clear())
 watch(
   () => data.text,
   (value) => {
     let objectRes = parseProto(value)
-    let dataRes = columnsGene(objectRes.data, objectRes.commentMap)
-    dataRes += '\n' + formInitGene(objectRes.data)
-    dataRes += '\n' + mockDataGene(objectRes.data)
-    dataRes += '\n' + objectRes.nestResList.map((item) => enumGene(item)).join('\n')
+    let dataRes = ''
+    if (language.value === 'javascript') {
+      dataRes = columnsGene(objectRes.data, objectRes.commentMap)
+      dataRes += '\n' + formInitGene(objectRes.data)
+      dataRes += '\n' + mockDataGene(objectRes.data)
+      dataRes += '\n' + objectRes.nestResList.map((item) => enumGene(item)).join('\n')
+    } else if (language.value === 'java') {
+      dataRes += '\n' + java2Proto(objectRes.data, objectRes.MessageName, objectRes.repeatedMap)
+      dataRes += '\n' + proto2Java(objectRes.data, objectRes.MessageName, objectRes.repeatedMap, objectRes.typeMap)
+    }
     data.result = dataRes
     editor2.getAction('editor.action.formatDocument').run()
   },

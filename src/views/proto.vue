@@ -61,11 +61,10 @@
 </template>
 
 <script setup>
-import { formInitGene, columnsGene, enumGene, mockDataGene } from '@/utils/format'
-import { java2Proto, proto2Java } from '@/utils/java'
 import MonacoEditor from 'vue-monaco-cdn'
 import registerProtobuf from 'monaco-proto-lint'
 import { parseProto } from '@/utils'
+import { formatJavaScriptResultData, formatJavaResultData } from './index'
 import { watch } from 'vue'
 
 // parseProto(csontent)
@@ -112,23 +111,25 @@ function clear() {
   data.template = ''
   data.result = ''
 }
-watch(language, () => clear())
+watch(language, () => {
+  dataResFun(data.text)
+})
 watch(
   () => data.text,
   (value) => {
-    let objectRes = parseProto(value)
-    let dataRes = ''
-    if (language.value === 'javascript') {
-      dataRes = columnsGene(objectRes.data, objectRes.commentMap)
-      dataRes += '\n' + formInitGene(objectRes.data)
-      dataRes += '\n' + mockDataGene(objectRes.data)
-      dataRes += '\n' + objectRes.nestResList.map((item) => enumGene(item)).join('\n')
-    } else if (language.value === 'java') {
-      dataRes += '\n' + java2Proto(objectRes.data, objectRes.MessageName, objectRes.repeatedMap)
-      dataRes += '\n' + proto2Java(objectRes.data, objectRes.MessageName, objectRes.repeatedMap, objectRes.typeMap)
-    }
-    data.result = dataRes
-    editor2.getAction('editor.action.formatDocument').run()
+    dataResFun(value)
   },
 )
+
+function dataResFun(value) {
+  let objectRes = parseProto(value)
+  let dataRes = ''
+  if (language.value === 'javascript') {
+    dataRes = formatJavaScriptResultData(objectRes)
+  } else if (language.value === 'java') {
+    dataRes = formatJavaResultData(objectRes)
+  }
+  data.result = dataRes
+  editor2.getAction('editor.action.formatDocument').run()
+}
 </script>

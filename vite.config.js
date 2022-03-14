@@ -10,6 +10,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 export default defineConfig({
   server: {
     port: 3001,
+    host: true,
   },
   resolve: {
     alias: {

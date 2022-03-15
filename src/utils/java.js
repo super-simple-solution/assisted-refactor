@@ -5,7 +5,7 @@ function java2Proto(data, MessageName, repeatedMap) {
   const repeatedKeys = dataKeys.filter((item) => repeatedMap[item])
   const keys = dataKeys
     .filter((item) => item !== 'id')
-    .filter((item) => repeatedKeys.find((repeat) => repeat != item))
+    .filter((item) => !repeatedKeys.includes(item))
     .map((item) => toHump(item))
   let template = ''
   repeatedKeys.forEach((item) => {
@@ -65,7 +65,8 @@ function proto2Java(data, MessageName, repeatedMap, ruleMap) {
     entity.set${humpKey}s(JSON.toJSONString(${item}JsonList));\n\t\t`
   })
 
-  return `public static Area pb2model(${MessageName} pbEntity, Integer createUser) {
+  const paramName = MessageName.includes('Item') ? MessageName.replace('Item', '') : MessageName
+  return `public static ${paramName} pb2model(${MessageName} pbEntity, Integer createUser) {
   try {
     ${template}
     return entity;
